@@ -4,33 +4,36 @@
     <title>Angular Learning App</title>
 	<meta charset="utf-8" />
     <script src="Scripts/angular.min.js"></script>
+    <link rel="stylesheet" href="Styles/Greeting.css">
 </head>
 <body>
     <div ng-app="LearningApp" ng-controller="GreetingController">
-        <div>
-            Name:
-            <input type="text" ng-model="userName">
-            <input type="button" value="Submit" ng-click="getGreeting(userName)">
-        </div>
-        <div>
-            {{data}}
-        </div>
+        <div greeting-input></div>
     </div>
     <script>
         var learningApp = angular.module('LearningApp', []);
         learningApp.controller('GreetingController', function ($scope, $http) {
             $scope.data = '';
+            $scope.class = '';
             $scope.getGreeting = function (userName) {
                 $http.get('http://localhost:81/api/Default/Get/' + userName)
                 .then(function (response) {
                     console.log(response);
+                    $scope.class = 'success';
                     $scope.data = response.data.Greeting;
                 },
                 function (response) {
                     console.log(response);
+                    $scope.class = 'error';
                     $scope.data = response.data.Message;
                 });
             }
+        });
+
+        learningApp.directive('greetingInput', function () {
+            return {
+                templateUrl: '/Views/GreetingInput.html'
+            };
         });
     </script>
 </body>
